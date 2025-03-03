@@ -1,0 +1,1637 @@
+/* High Scores:
+
+Me:
+Abuela:
+
+*/
+
+/* CONTROLS:
+    W to move UP
+    S to move DOWN
+    UP ARROW to move UP
+    DOWN ARROW to move DOWN
+    HOLD A to SHOOT
+    MOVE MOUSE to AIM
+    [ to DECREASE VOLUME
+    ] to INCREASE VOLUME
+    M to MUTE MUSIC
+*/
+
+/************* IDEAS 
+WORLD 4 IS WATER WORLD
+THERE ARE TURRETS WITH WATER SHIELDS THAT DO NOT DAMAGE TOWER BUT DEFLECT FRIE PROJECTILES, FORCING PLAYER TO MOVE AROUND
+WATER SHIELDS CAN BE SHOT BY TURRETS OR STATIONARY
+USE THE "DISPLACE" COLLISION FOR THIS EFFECT
+WATER WORLD BOSS IS A FISH THAT BLOWS BUBBLES (WATER SHIEDLS) AND IS MELEE (LIKE FIRST WORLD BOSS)
+
+A WORLD IS A STONE WORLD WHERE THERE ARE STATIONARY STONE TOTEMS?GOLEMS TAHT ARE LIKE WALLS OR TANKS, MAKING THE PLAYER MOVE AROUND. SIMILAR TO WATER IDEA BUT PROJETILES ARE ABSORBED RATHER THAN DEFLECTED.
+
+MIRROR MOB THAT REFLECTS PROJECTILES AND DAMAGE CASTLE WHEN REFLECTED; GHOST WORLD? HALLOWEEN? TURNS PROJECTILES A DIFFERENT COLOR; GREEN, PURPLE? BOTH?
+
+FIRE GOLEM THAT ABSORBS FIRE PROJECTILES AND GROWS UNTIL IT EXPLODES AT A CERTAIN SIZE. OR SPLITS INTO SMALLER GOLEMS ON HIT (OR A CERTAIN NUMBER OF HITS);
+
+Necromancer boss world 5 creates skeletons Maybe part of halloween world spooky
+alchemist mob hat heals enemies halloween world?
+
+DIFFERENT POWERS: ICE POWERS WHEN ICE BOSS KILLED: 5 ammo, FREEZE ENEMIES, MORE DAMAGE TO FIRE ENEMIES. RECHARGABLE AMMMO? NERF? HEALS? CHANGE DRAGON COSTUMES WHEN USING DIFFERENT ELEMENTS/POWERS?
+
+BOMBS THAT GET THROWN AT YOU; YOU MUST SHOOT IN AIR FOR THEM TO EXPLODE. MASSIVE 20 DAMAGE.
+*/
+
+/* hey */
+
+
+let canvasWidth=640;
+let canvasHeight=480;
+let bgImg;
+let paused=false;
+
+let player;
+let playerX=40;
+let playerY=240;
+let playerWidth=122;
+let playerHeight=100;
+let playerColliderWidth=100;
+let playerColliderHeight=78;
+let playerHealth=3;
+
+let knightSpeed=2;
+
+let knightHealth;
+
+let stage=1;
+
+let speed=4;
+let fr=33;
+let knightsDefeated=20;// 20 for Mr. Tomich, one of the most W math teachers
+
+let projectileColliderWidth=28;
+let projectileColliderHeight=28;
+
+let direction=180;
+
+let knight;
+let knightX=500;
+let knightY=300;
+let knightColliderWidth=56;
+let knightColliderHeight=60;
+let knightWidth=59;
+let knightHeight=64;
+let knightSpawned=false;
+
+let horse;
+let horseWidth=75;
+let horseHeight=80;
+let horseColliderWidth=75;
+let horseColliderHeight=70;
+let horse1Health=5;
+let horse1MaxHealth=5;
+let horse2Health=5;
+let horse2MaxHealth=5;
+let horse1Spawned=false;
+let horse2Spawned=false;
+let horseSpeed=3;
+let horse1Direction=180;
+let horse2Direction=180;
+
+let yeti;
+let yetiWidth=80;
+let yetiHeight=90;
+let yetiColliderWidth=70;
+let yetiColliderHeight=80;
+let yetiSpawned=false;
+let yetiSpeed=2;
+let yetiHealth=20;
+let yetiMaxHealth=20;
+let snowballTimer;
+
+let ice;
+let iceHealth=7;
+let iceMaxHealth=7;
+let iceColliderWidth=56;
+let iceColliderHeight=56;
+
+let lavaGolemsSpawned=false;
+
+let lavaGolemLargeWidth=96;
+let lavaGolemLargeHeight=75;
+let lavaGolemLargeColliderWidth=85
+let lavaGolemLargeColliderHeight=68
+let lavaGolemLargeHealth=17;//For W Mr. Tomich
+let lavaGolemLargeMaxHealth=17;
+
+let lavaGolem;
+let lavaGolemWidth=64;
+let lavaGolemHeight=50;
+let lavaGolemColliderWidth=58;
+let lavaGolemColliderHeight=40;
+let lavaGolemKills=0;
+let lavaGolemSpawned=false;
+let lavaGolem1Spawned=false;
+let lavaGolemHealth=7;
+let lavaGolemMaxHealth=7;
+let lavaGolem1Health=9;
+let lavaGolem1MaxHealth=9;
+//let scaleFactor=1;
+
+
+let lavaGolemMediumWidth=48;
+let lavaGolemMediumHeight=37.5;
+let lavaGolemMediumColliderWidth=45;
+let lavaGolemMediumColliderHeight=35;
+let lavaGolemMedium1Health=3;
+let lavaGolemMedium1MaxHealth=3;
+let lavaGolemMedium2Health=4;
+let lavaGolemMedium2MaxHealth=4;
+let lavaGolemMedium3Health=5;
+let lavaGolemMedium3MaxHealth=5;
+let lavaGolemMedium4Health=4;
+let lavaGolemMedium4MaxHealth=4;
+
+
+let castle;
+let castleX= 60;
+let castleY=215;
+let castleWidth;
+let castleHeight;
+let castleHealth=250;
+let castleMaxHealth=250;
+let castleColliderWidth=36;
+let castleColliderHeight=455;
+
+let projectileWidth=32;
+let projectileHeight=32;
+
+let boss;
+let bossWidth=103;
+let bossHeight=96;
+let bossX=600;
+let bossY=400;
+let bossColliderWidth=96;
+let bossColliderHeight=90;
+let bossHealth=40;
+let bossMaxHealth=40;
+let bossSpawned=false;
+let bossDefeated=false;
+
+let frostMage;
+let frostMageWidth=80;
+let frostMageHeight=133;
+let frostMageColliderWidth=80;
+let frostMageColliderHeight=125;
+let frostMageHealth=20;
+let frostMageMaxHealth=20;
+let frostMageSpawned=false;
+let frostMageDefeated=false;
+let iceShieldHealth=2;
+let iceShieldMaxHealth=2;
+let snowflakeTimer;
+let frozen=false;
+
+let fireArcher;
+let fireArcherWidth=96;
+let fireArcherHeight=133;
+let fireArcherColliderWidth=80;
+let fireArcherColliderHeight=123;
+let fireArcherHealth=35;
+let fireArcherMaxHealth=35;
+let fireArcherSpawned=false;
+let fireArcherDefeated=false;
+let fireArrowTimer;
+
+
+let archerWidth=64;
+let archerHeight=64;
+let archerX;
+let archerY;
+let archerColliderWidth=60;
+let archerColliderHeight=60;
+let archerRadius=545;
+let archerSpawned=false;
+let archerTime;
+let shootTimer=0;
+let archer1=false;
+let archer2=false;
+let archer3=false;
+let archer4=false;
+let archer5=false;
+
+let healthWidth=50;
+let healthHeight=3;
+
+let enemyColliderWidth=56;
+let enemyColliderHeight=60;
+
+
+
+let score=0;
+
+let song;
+
+let gameScene="title";
+let sceneImg;
+let sceneText;
+let sceneSubtitle;
+
+let startTime;
+let timer=0;
+let seconds;
+let reloading=false;
+let reloadTime=0;
+let archerTimer=0;
+
+/*
+How to make invincibility frames on player hit:
+
+let hurtTime=0;
+let blinking=false;
+
+function getHit(){
+if(!blinking){
+playerHealth--;
+soundHurt.play();
+hurtTime=timer;
+blinking=true;
+}
+}
+
+function timedEvents(){
+if(blinking){
+if(timer-hurtTime>=1000){//(1000 is miliseconds)
+blinking=false;
+} 
+}
+}
+
+function renderBlinking(){
+fill("red");
+stroke("white");
+strokeWeight(4);
+textSize(30);
+text("!", player.position.x-30, player.position.y-10,canvasWidth, canvasHeight)
+}
+
+PUT THIS IN AN "EVERY-FRAME" FUNCTION:
+if(blinking){
+renderBlinking();
+}
+*/
+
+
+let songIsPlaying;
+
+let volume=1;
+
+let soundShoot; //when player shoots a fireball.
+let soundSelect; //when the player clicks on title screen.
+
+function preload(){
+  
+  song=loadSound("music/Danosongs - Dublin Forever (NEW).mp3");
+  //music by DanoSongs
+  soundShoot=loadSound("music/fire projectile shot sound (NEW).mp3");
+  soundSelect=loadSound("music/button.mp3");
+  soundCastleHit=loadSound("music/explosion.mp3");
+  soundHitEnemy=loadSound("music/explosion (small).mp3");
+  soundCastleDestroy=loadSound("music/giant explosion.mp3");
+  //sound FX by Sound Jay
+  
+  bgImg= loadImage("Background 3.jpg");
+  iceBgImg=loadImage("images/Ice Background.png");
+  lavaBgImg=loadImage("images/lavaBackground.png");
+  LoseImg=loadImage("images/LoseScreen.png");
+  TitleImg=loadImage("images/TitleScreen.png");
+  arrowImg=loadImage("images/Arrow.png");
+  fireArrowImg=loadSpriteSheet("images/FireArrow.png");
+  horseImg=loadSpriteSheet("images/Cavalry.png", horseWidth, horseHeight, 2);
+  yetiImg=loadSpriteSheet("images/YetiAnimation.png", yetiWidth, yetiHeight, 8);
+  lavaGolemLargeImg=loadSpriteSheet("images/lavaGolemLarge.png", lavaGolemLargeWidth, lavaGolemLargeHeight, 6);
+  lavaGolemImg=loadSpriteSheet("images/lavaGolem.png", lavaGolemWidth, lavaGolemHeight, 6);
+  lavaGolemMediumImg=loadSpriteSheet("images/lavaGolemMedium.png", lavaGolemMediumWidth, lavaGolemMediumHeight, 6);
+  frostMageImg=loadSpriteSheet("images/FrostMage.png", frostMageWidth, frostMageHeight, 7);
+  iceImg=loadImage("images/ice.png");
+  fireArcherWalkImg=loadSpriteSheet("images/FireArcherWalk.png", fireArcherWidth, fireArcherHeight, 4);
+  fireArcherShootImg=loadSpriteSheet("images/FireArcherShoot.png", fireArcherWidth, fireArcherHeight, 6);
+  fireArrowImg=loadImage("images/FireArrow.png");
+  snowflakeImg=loadImage("images/Snowflake.png");
+  snowballImg=loadImage("images/snowball.png");
+  playerImg= loadSpriteSheet("images/player.png", playerWidth, playerHeight,6);
+  frozenPlayerImg=loadSpriteSheet("images/FrozenDragon.png", 133,100,1);
+  knightImg= loadSpriteSheet("images/Knight.png", knightWidth, knightHeight, 4);
+  frozenKnightImg=loadSpriteSheet("images/FrozenKnight.png", knightWidth, knightHeight, 4);
+  fireKnightImg=loadSpriteSheet("images/fireKnight.png", knightWidth, knightHeight, 4);
+  archerWalkImg= loadSpriteSheet("images/ArcherWalk.png", archerWidth, archerHeight,4);
+  archerShootImg= loadSpriteSheet("images/ArcherShoot.png", archerWidth, archerHeight, 5);
+  castleImg=loadImage("images/CastleWall.png");
+  //projectileImg= loadSpriteSheet("images/projectile.png", projectileWidth, projectileHeight, 5 );
+  projectileImg=loadImage("images/Fireball.png");
+ bossImg=loadSpriteSheet("images/Boss.png", bossWidth, bossHeight, 2);
+  
+  flyAnimation=loadAnimation(playerImg);
+  frozenPlayerAnimation=loadAnimation(frozenPlayerImg);
+  knightWalkAnimation=loadAnimation(knightImg);
+  frozenKnightWalkAnimation=loadAnimation(frozenKnightImg);
+  fireKnightWalkAnimation=loadAnimation(fireKnightImg)
+  //projectileFlyAnimation=loadAnimation(projectileImg);
+  bossWalkAnimation=loadAnimation(bossImg);
+  archerWalkAnimation=loadAnimation(archerWalkImg);
+  archerShootAnimation=loadAnimation(archerShootImg);
+   fireArcherWalkAnimation=loadAnimation(fireArcherWalkImg);
+  fireArcherShootAnimation=loadAnimation(fireArcherShootImg);
+  fireArrowAnimation=loadAnimation(fireArrowImg);
+  horseWalkAnimation=loadAnimation(horseImg);
+  floatAnimation=loadAnimation(frostMageImg);
+  yetiWalkAnimation=loadAnimation(yetiImg);
+  lavaGolemLargeWalkAnimation=loadAnimation(lavaGolemLargeImg);
+  lavaGolemWalkAnimation=loadAnimation(lavaGolemImg);
+  lavaGolemMediumWalkAnimation=loadAnimation(lavaGolemMediumImg);
+}
+
+function setup() {
+  createCanvas(canvasWidth, canvasHeight);
+  castle=createSprite(castleX, castleY);
+  castle.addImage(castleImg);
+  //person=createSprite(200,200);
+  //person.addAnimation('fly', flyAnimation);
+  player=createSprite(playerX,playerY);
+  player.addAnimation('fly',flyAnimation);
+  player.addAnimation('frozen', frozenPlayerAnimation);
+  player.color="blue";
+ //knight=createSprite(knightX, knightY);
+  //knight.addAnimation('knightWalk', knightWalkAnimation);
+  //boss=createSprite(bossX,bossY);
+ //boss.addAnimation('bossWalk', bossWalkAnimation);
+
+  frameRate(fr);
+  
+  enemies=new Group();
+  //enemies.add(knight);
+  bosses=new Group();
+  archers=new Group();
+  enemyProjectiles=new Group();
+  projectiles = new Group();
+  horses1=new Group();
+  horses2= new Group();
+  snowflakes= new Group();
+  frostMages= new Group();
+  yetiGroup= new Group();
+  snowballs= new Group();
+  fireArchers= new Group();
+  fireArrows=new Group();
+  largeLavaGolems=new Group();
+  lavaGolems=new Group();
+  mediumLavaGolems=new Group();
+  iceBlocks = new Group();
+  
+  player.setCollider("rectangle", 0, 0,playerColliderWidth, playerColliderHeight);
+  castle.setCollider("rectangle",0,0,castleColliderWidth, castleColliderHeight);
+  //knight.setCollider("rectangle", 0,0,enemyColliderWidth, enemyColliderHeight);
+  //boss.setCollider("rectangle", 0,0,enemyColliderWidth, enemyColliderHeight);
+  
+  //player.debug=true;
+  //boss.debug=true;
+  //castle.debug=true;
+  
+  
+}
+
+function loaded(){
+  song.play();
+  song.loop();
+  song.setVolume(volume);
+  songIsPlaying=true;
+}
+
+
+
+function playerControls(){
+  if(!frozen){
+    if(keyIsDown(UP_ARROW)||keyIsDown(87)){
+    player.position.y-=speed;
+      if(player.position.y<0+playerHeight/2){
+    player.position.y=playerHeight/2;
+      }
+    }
+    if(keyIsDown(DOWN_ARROW)||keyIsDown(83)){
+      player.position.y+=speed;
+      if(player.position.y>canvasHeight-playerHeight/2){
+      player.position.y=canvasHeight-playerHeight/2.3;
+      }
+    }
+  }
+ if(frostMageDefeated==true){
+   frozen=false;
+   player.changeAnimation('fly');
+ }
+}
+
+function enemyMovements(){
+  if(horse2Spawned){
+    horse2.setSpeed(horseSpeed, horse2Direction);
+    if(horse2.position.y>=320){
+      horse2Direction=210;
+    }
+    if (horse2.position.y<=160){
+      horse2Direction=150;
+    }
+  }
+  if(lavaGolemKills>=7){
+   lavaGolemKills=0;
+   lavaGolemsSpawned=false;
+  }
+}
+
+
+function collisions(){
+  //collisions are overlap, displace, and collide.
+  projectiles.overlap(enemies, destroyKnight);
+  archers.overlap(projectiles, destroyArcher);
+  bosses.overlap(projectiles, destroyBoss);
+  frostMages.overlap(projectiles, destroyFrostMage);
+  horses1.overlap(projectiles, destroyHorse1);
+  horses2.overlap(projectiles, destroyHorse2);
+  castle.overlap(enemies, getHitByKnight);
+  castle.collide(bosses, getHitByBoss);
+  castle.overlap(enemyProjectiles, getHitByArrow);
+  castle.overlap(horses1, getHitByHorse1);
+  castle.overlap(horses2, getHitByHorse2);
+  castle.overlap(snowflakes, getHitBySnowflake);
+  yetiGroup.overlap(projectiles, destroyYeti);
+  castle.overlap(yetiGroup, getHitByYeti);
+  castle.overlap(snowballs, getHitBySnowball);
+  fireArchers.overlap(projectiles, destroyFireArcher);
+  castle.overlap(fireArrows, getHitByFireArrow);
+  largeLavaGolems.overlap(projectiles, destroyLavaGolemLarge)
+  lavaGolems.overlap(projectiles, destroyLavaGolem);
+  mediumLavaGolems.overlap(projectiles, destroyLavaGolemMedium);
+  castle.overlap(largeLavaGolems, getHitByLavaGolemLarge);
+  castle.overlap(lavaGolems, getHitByLavaGolem);
+  castle.overlap(mediumLavaGolems, getHitByLavaGolemMedium);
+  iceBlocks.overlap(projectiles, destroyIce);
+}
+
+
+
+function destroyKnight(destroyed, projectile){
+  destroyed.remove();
+  projectile.remove();
+  soundHitEnemy.play();
+  score+=10
+  knightsDefeated++;
+  knightSpeed+=0.0001
+  //speed becomes 0.001 if knights have 2 hp
+  if (!bossDefeated){
+     createKnight(600+random(200), 20+random(330));
+  }
+  if (stage==2){
+    createFrozenKnight(600+random(200), 20+random(330));
+  }
+  /*if (stage==2&&frostMageSpawned){
+    createFrozenKnight(735, 210+random(60));
+  }*/
+  if(stage==3){
+    createFireKnight(600+random(200), 20+random(330));
+  }
+  if (knightsDefeated>=17){// 17 for Mr. Tomich, one of the most W math teachers.
+    if(!horse1Spawned){
+      if(stage==1){
+        createHorse1(640+random(200), 20+random(330));
+       } 
+      }
+     if(!horse2Spawned){
+       if(stage==1){
+         createHorse2(640+random(200), 20+random(330));
+       }
+     }
+     if(!yetiSpawned){
+       if(stage==2){
+        createYeti(600+random(200), 20+random(330));
+       }
+       /*if(stage==2&&frostMageSpawned){
+          createYeti(700, 240)
+       }*/
+     }
+       if(stage==3){
+         if (lavaGolemKills==0&&lavaGolemsSpawned==false){
+            createLavaGolemLarge(600+random(50), 20+random(330));
+           lavaGolemsSpawned=true;
+         }
+       }
+    }
+  }
+
+
+function destroyArcher(destroyed, projectile){
+  destroyed.remove();
+  projectile.remove();
+  knightsDefeated++;
+  soundHitEnemy.play();
+  score+=20;
+  //archerSpawned=false;
+  createArcher(680, 20+random(330));
+}
+
+function destroyBoss(boss, projectile){
+  bossHealth--;
+  soundHitEnemy.play();
+   projectile.remove();
+  if (bossHealth<=0){
+    boss.remove();
+    //bossSpawned=false;
+    score+=50;
+    //bossHealth=bossMaxHealth;
+    bossDefeated=true;
+    bossSpawned=false;
+  }
+}
+
+function destroyFrostMage(frostMage, projectile){
+  if (iceShieldHealth<=0){
+      frostMageHealth--;
+  soundHitEnemy.play();
+}
+  projectile.remove();
+  if(frostMageHealth<=0){
+    frostMage.remove();
+    score+=50;
+    //frostMageHealth=frostMageMaxHealth;
+    frostMageDefeated=true;
+    frostMageSpawned=false;
+  }
+}
+
+function destroyFireArcher(fireArcher, projectile){
+  fireArcherHealth--;
+  soundHitEnemy.play();
+  projectile.remove();
+  if(fireArcherHealth<=0){
+    fireArcher.remove();
+    score+=50;
+    //frostMageHealth=frostMageMaxHealth;
+    fireArcherDefeated=true;
+    fireArcherSpawned=false;
+  }
+}
+
+function destroyHorse1(destroyed, projectile){
+  horse1Health--;
+  soundHitEnemy.play();
+  projectile.remove();
+  if (horse1Health<=0){
+    destroyed.remove();
+    horseSpeed+=0.06
+    score+=30;
+    horse1Health=horse1MaxHealth;
+    horse1Spawned=false;
+  }
+}
+
+function destroyHorse2(destroyed, projectile){
+  horse2Health--;
+  soundHitEnemy.play();
+  projectile.remove();
+  if (horse2Health<=0){
+    destroyed.remove();
+    horseSpeed+=0.06
+    score+=30;
+    horse2Health=horse2MaxHealth;
+    horse2Spawned=false;
+  }
+}
+
+function destroyYeti(destroyed, projectile){
+  yetiHealth--;
+  soundHitEnemy.play();
+  projectile.remove();
+  if (yetiHealth<=0){
+    destroyed.remove();
+    score+=30;
+    yetiHealth=yetiMaxHealth;
+    yetiSpawned=false;
+  }
+}
+
+function destroyIce(destroyed, projectile){
+  iceHealth--;
+  soundHitEnemy.play();
+  projectile.remove();
+  if(iceHealth<=0){
+    iceShieldHealth--;
+    destroyed.remove();
+    iceHealth=iceMaxHealth;
+  }
+}
+
+function destroyLavaGolemLarge(destroyed, projectile){
+  lavaGolemLargeHealth--;
+ if (lavaGolemLargeHealth<=0){
+    score+=20;
+      lavaGolemLargeSpawned=false;
+    lavaGolemKills++;
+    lavaGolemHealth=lavaGolemMaxHealth;
+    createLavaGolem(lavaGolemLarge.position.x, lavaGolemLarge.position.y+33)
+    createLavaGolem1(lavaGolemLarge.position.x, lavaGolemLarge.position.y-33)
+    destroyed.remove();
+   }
+  }
+
+
+function destroyLavaGolem(destroyed, projectile){
+  if (destroyed==lavaGolem){
+  lavaGolemHealth--;
+    if (lavaGolemHealth<=0){
+    score+=20;
+      lavaGolemSpawned=false;
+    lavaGolemKills++;
+    lavaGolemHealth=lavaGolemMaxHealth;
+    createLavaGolemMedium1(lavaGolem.position.x, lavaGolem.position.y+33)
+    createLavaGolemMedium2(lavaGolem.position.x, lavaGolem.position.y-33)
+    destroyed.remove();
+   }
+  }
+  if (destroyed==lavaGolem1){
+  lavaGolem1Health--;
+    if (lavaGolem1Health<=0){
+    score+=20;
+      lavaGolem1Spawned=false;
+    lavaGolemKills++;
+    lavaGolem1Health=lavaGolem1MaxHealth;
+    createLavaGolemMedium3(lavaGolem1.position.x, lavaGolem1.position.y+33)
+    createLavaGolemMedium4(lavaGolem1.position.x, lavaGolem1.position.y-33)
+    destroyed.remove();
+   }
+  }
+  soundHitEnemy.play();
+  projectile.remove();
+   //lavaGolem.scale(2.0);
+  
+}
+
+function destroyLavaGolemMedium(destroyed, projectile){
+  if (!lavaGolemSpawned){
+    if (destroyed==lavaGolemMedium1){
+    lavaGolemMedium1Health--;
+    if (lavaGolemMedium1Health<=0){
+    score+=10;
+      lavaGolemKills++;
+    lavaGolemMedium1Health=lavaGolemMedium1MaxHealth;
+    destroyed.remove();
+   }
+  }
+  if (destroyed==lavaGolemMedium2){
+    lavaGolemMedium2Health--;
+    if (lavaGolemMedium2Health<=0){
+    score+=10;
+      lavaGolemKills++;
+    lavaGolemMedium2Health=lavaGolemMedium2MaxHealth;
+    destroyed.remove();
+   }
+  }
+ }
+ if (!lavaGolem1Spawned){
+   if (destroyed==lavaGolemMedium3){
+    lavaGolemMedium3Health--;
+    if (lavaGolemMedium3Health<=0){
+    score+=10;
+      lavaGolemKills++;
+    lavaGolemMedium3Health=lavaGolemMedium3MaxHealth;
+    destroyed.remove();
+   }
+  }
+  if (destroyed==lavaGolemMedium4){
+    lavaGolemMedium4Health--;
+    if (lavaGolemMedium4Health<=0){
+    score+=10;
+      lavaGolemKills++;
+    lavaGolemMedium4Health=lavaGolemMedium4MaxHealth;
+    destroyed.remove();
+   }
+  }
+ }
+  soundHitEnemy.play();
+  projectile.remove();
+}
+
+function timedEvents(){
+  shootTimer=seconds%3; //means the remainder of seconds/3
+  snowflakeTimer=seconds%3;
+  snowballTimer=seconds%1;
+  fireArrowTimer=seconds%5;
+  //console.log(shootTimer+":"+timer%1000);
+  if(shootTimer==0&&timer%1000<30){
+     for (i=0; i<archers.length; i++){
+       if(archerSpawned){
+      if(archers[i].position.x<=600){
+        shootCastle(archers[i]);
+        archers[i].setSpeed(0,direction);
+      archers[i].changeAnimation('archerShoot');
+      }
+    }
+  }
+}
+ /* if(archerSpawned&&timer-archerTime>=5000){
+    archerSpawned=false;
+  }*/
+  if(snowflakeTimer==0&&timer%1000<30){
+    if(frostMageSpawned&&frostMageDefeated==false){
+      shootIce();
+    }
+  }
+  if(snowballTimer==0&&timer%1000<30){
+    if(yetiSpawned){
+      shootSnowball();
+    }
+  }
+  if(fireArrowTimer==0&&timer%1000<30){
+    if(fireArcherSpawned){
+      shootFireArrow(60,215,60,115,60,315);
+    }
+  }
+  /*
+  potionTimer=seconds%10;
+  if (potionTimer==1&&timer%1000<30){
+    createPotion(random(canvasWidth),random(canvasHeight))
+  }
+  
+  */
+}
+
+function shoot(){
+  if(keyIsDown(65)){
+    if (!reloading){
+       if (gameScene=="level"){
+    soundShoot.play();
+  let projectile = createSprite(player.position.x, player.position.y)
+  projectile.addImage(projectileImg);
+  //projectile.addAnimation('projectileFly', projectileFlyAnimation);
+  projectile.attractionPoint(5+speed,mouseX,mouseY);
+  projectile.setCollider("rectangle",0,0,projectileColliderWidth,projectileColliderHeight);
+//console.log("the level loaded");
+  //projectile.debug=true;
+  
+  projectiles.add(projectile);
+  }
+    reloading=true;
+    reloadTime=timer;
+  }
+    }
+  if(reloading){
+    if(timer-reloadTime>=150){
+      reloading=false;
+    }
+  }
+    
+}
+
+function mousePressed(){
+   /*if (gameScene=="level"){
+    soundShoot.play();
+  let projectile = createSprite(player.position.x, player.position.y)
+  projectile.addImage(projectileImg);
+  //projectile.addAnimation('projectileFly', projectileFlyAnimation);
+  projectile.attractionPoint(5+speed,mouseX,mouseY);
+  projectile.setCollider("rectangle",0,0,projectileColliderWidth,projectileColliderHeight);
+//console.log("the level loaded");
+  //projectile.debug=true;
+  
+  projectiles.add(projectile);
+  }*/
+  if(gameScene=="title"){
+    soundSelect.play();
+    gameScene="level";
+    startTime=Date.now();
+    loaded();
+    for(let i=0; i<8; i++){
+  let knightHeight=random(450);
+  let knightCanvasX= random(200);
+  let posX=600+knightCanvasX;
+  let posY=knightHeight;
+  createKnight(posX,posY);
+}
+    //console.log("it works");
+  }
+  //console.log("you clicked");
+  if(gameScene=="gameOver"){
+ 
+  }
+}
+ 
+
+
+function shootCastle(thisArcher){
+  
+   let arrow=createSprite(thisArcher.position.x, thisArcher.position.y);
+  arrow.addImage(arrowImg);
+  arrow.attractionPoint(15+speed, castle.position.x, castle.position.y);
+  arrow.setCollider("rectangle",0,0,projectileColliderWidth, 3);
+  enemyProjectiles.add(arrow);
+  //arrow.debug=true;
+  
+}
+
+function shootIce(){
+  let snowflake=createSprite(frostMage.position.x, frostMage.position.y);
+  snowflake.addImage(snowflakeImg);
+  snowflake.attractionPoint(1+speed, castle.position.x, castle.position.y);
+  snowflake.setCollider("rectangle", 0,0,projectileColliderWidth, projectileColliderHeight);
+  snowflakes.add(snowflake);
+  //snowflake.debug=true;
+}
+
+function shootSnowball(){
+  if(yetiSpawned){
+   let snowball=createSprite(yeti.position.x, yeti.position.y);
+  snowball.addImage(snowballImg);
+  snowball.attractionPoint(2+speed, castle.position.x, castle.position.y);
+  snowball.setCollider("rectangle", 0,0,projectileColliderWidth, projectileColliderHeight);
+  snowballs.add(snowball);
+  //snowball.debug=true; 
+  }
+}
+
+function shootFireArrow(attractionPoint1x, attractionPoint1y, attractionPoint2x, attractionPoint2y, attractionPoint3x, attractionPoint3y){
+  if(fireArcherSpawned){
+    let fireArrow1=createSprite(fireArcher.position.x, fireArcher.position.y);
+    let fireArrow2=createSprite(fireArcher.position.x, fireArcher.position.y);
+    let fireArrow3=createSprite(fireArcher.position.x, fireArcher.position.y);
+    fireArrow1.addImage(fireArrowImg);
+    fireArrow2.addImage(fireArrowImg);
+    fireArrow3.addImage(fireArrowImg);
+    fireArrow1.attractionPoint(15+speed, attractionPoint1x, attractionPoint1y);
+    fireArrow2.attractionPoint(15+speed, attractionPoint2x, attractionPoint2y);
+    fireArrow3.attractionPoint(15+speed, attractionPoint3x, attractionPoint3y);
+    fireArrow1.setCollider("rectangle", 0,0, projectileColliderWidth, projectileColliderHeight);
+    fireArrow2.setCollider("rectangle", 0,0, projectileColliderWidth, projectileColliderHeight);
+    fireArrow3.setCollider("rectangle", 0,0, projectileColliderWidth, projectileColliderHeight);
+    fireArrows.add(fireArrow1);
+    fireArrows.add(fireArrow2);
+    fireArrows.add(fireArrow3);
+    //fireArrow1.debug=true;
+    //fireArrow2.debug=true;
+    //fireArrow3.debug=true;
+  }
+}
+
+function checkForArchers(){
+  if(frostMageDefeated){
+       if(score>=4500&&archer1==false){
+    createArcher(680,20+random(330));
+    archer1=true;
+  }
+  /*if (archerSpawned){
+   if(archers[i].position.x<=545){
+    archers[i].setSpeed(0, direction);
+    } 
+  }*/
+  if(score>=4500&&archer2==false){
+    createArcher(680,20+random(330));
+    archer2=true;
+  }
+  if(fireArcherSpawned&&archer3==false){
+    createArcher(680,20+random(330));
+    archer3=true;
+  }
+  if(fireArcherSpawned&&archer4==false){
+    createArcher(680,20+random(330));
+    archer4=true;
+  }
+}
+
+   /*if(score>=5000&&archer5==false){
+    createArcher(680,20+random(330));
+    archer5=true;
+  }*/
+}
+
+function checkForBosses(){
+  if(score>=15&&!bossDefeated&&!bossSpawned){
+    createBoss(680, 240);
+  }
+  if(score>=35&&!frostMageDefeated&&!frostMageSpawned&&bossDefeated){
+    createFrostMage(680,240);
+    createIce(500, 120);
+    createIce(500, 360);
+}
+ if (frostMageSpawned){
+   if(frostMage.position.x<=575){
+    frostMage.setSpeed(0, direction);
+    } 
+  }
+
+  if(score>=55&&!fireArcherSpawned&&!fireArcherDefeated&&frostMageDefeated){
+    createFireArcher(680,240);
+  }
+  if(fireArcherSpawned){
+    if(fireArcher.position.x<=550){
+      fireArcher.setSpeed(0,direction);
+      fireArcher.changeAnimation('fireArcherShoot');
+    }
+  }
+}
+
+function createKnight(x,y){
+ //knightSpawned=true; 
+  //let knightImg= loadSpriteSheet("images/Knight.png", knightWidth, knightHeight, 4);
+  //knightWalkAnimation=loadAnimation(knightImg);
+   let knight=createSprite(x,y);
+  knight.addAnimation('knightWalk', knightWalkAnimation);
+  knight.setSpeed(knightSpeed, direction);
+  knight.setCollider("rectangle",0,0,knightColliderWidth,knightColliderHeight);
+   knight.addAnimation('frozenKnightWalk', frozenKnightWalkAnimation);
+  //knight.debug=true;
+  enemies.add(knight);
+}
+
+function createFrozenKnight(x,y){
+  //knightSpawned=true;
+  //let knightImg= loadSpriteSheet("images/Knight.png", knightWidth, knightHeight, 4);
+  //knightWalkAnimation=loadAnimation(knightImg);
+   let frozenKnight=createSprite(x,y);
+  frozenKnight.addAnimation('frozenKnightWalk', frozenKnightWalkAnimation);
+  frozenKnight.setSpeed(knightSpeed, direction);
+  frozenKnight.setCollider("rectangle",0,0,knightColliderWidth,knightColliderHeight);
+  //knight.debug=true;
+  enemies.add(frozenKnight);
+}
+
+function createFireKnight(x,y){
+  //knightSpawned=true;
+  //let knightImg= loadSpriteSheet("images/Knight.png", knightWidth, knightHeight, 4);
+  //knightWalkAnimation=loadAnimation(knightImg);
+   let fireKnight=createSprite(x,y);
+  fireKnight.addAnimation('fireKnightWalk', fireKnightWalkAnimation);
+  fireKnight.setSpeed(knightSpeed, direction);
+  fireKnight.setCollider("rectangle",0,0,knightColliderWidth,knightColliderHeight);
+  //knight.debug=true;
+  enemies.add(fireKnight);
+}
+
+function createArcher(x,y){
+  archer=createSprite(x,y);
+  archer.addAnimation('archerWalk', archerWalkAnimation);
+  archer.addAnimation('archerShoot', archerShootAnimation);
+  archer.setSpeed(2,direction);
+  archer.setCollider("rectangle", 0,0,archerColliderWidth, archerColliderHeight);
+   //archer.overlap(projectiles, destroyArcher);
+  //archer.debug=true;
+  archers.add(archer);
+ archerSpawned=true;
+  archerTime=Date.now();
+}
+
+function createBoss(x,y){
+  boss=createSprite(x,y);
+  bossHealth=bossMaxHealth;
+  boss.addAnimation('bossWalk', bossWalkAnimation);
+  boss.setSpeed(0.65, direction);
+  boss.setCollider("rectangle",0,0,bossColliderWidth, bossColliderHeight);
+  //boss.debug=true;
+  bosses.add(boss);
+  bossSpawned=true;
+}
+
+function createHorse1(x,y){
+  horse1=createSprite(x,y);
+ // horse1Direction=150;
+  horse1Health=horse1MaxHealth;
+  horse1.addAnimation('horseWalk', horseWalkAnimation);
+  horse1.setSpeed(3, direction);
+  horse1.setCollider("rectangle", 0,0, horseColliderWidth, horseColliderHeight);
+  horse1Spawned=true;
+  horses1.add(horse1);
+  //horse1.debug=true;
+}
+
+function createHorse2(x,y){
+  horse2=createSprite(x,y);
+  horse2Direction=150;
+  horse2Health=horse2MaxHealth;
+  horse2.addAnimation('horseWalk', horseWalkAnimation);
+  horse2.setCollider("rectangle", 0,0, horseColliderWidth, horseColliderHeight);
+  horse2Spawned=true;
+  horses2.add(horse2);
+  //horse2.debug=true;
+}
+
+function createYeti(x,y){
+  yeti=createSprite(x,y);
+  yetiHealth=yetiMaxHealth;
+  yeti.setSpeed(1, direction);
+  yeti.addAnimation('yetiWalk', yetiWalkAnimation);
+  yeti.setCollider("rectangle",0,0, yetiColliderWidth, yetiColliderHeight);
+  yetiSpawned=true;
+  yetiGroup.add(yeti);
+  //yeti.debug=true;
+}
+
+function createIce(x,y){
+  ice=createSprite(x,y);
+  ice.addImage(iceImg);
+  iceHealth=iceMaxHealth;
+  ice.setCollider("rectangle", 0,0, iceColliderWidth, iceColliderHeight);
+  iceBlocks.add(ice);
+}
+
+function createLavaGolemLarge(x,y){
+  lavaGolemLarge=createSprite(x,y);
+  lavaGolemLargeHealth=lavaGolemLargeMaxHealth;
+  lavaGolemLarge.setSpeed(0.77, direction);
+  lavaGolemLarge.addAnimation('lavaGolemLargeWalk', lavaGolemLargeWalkAnimation);
+  lavaGolemLarge.setCollider("rectangle",0,0, lavaGolemLargeColliderWidth, lavaGolemLargeColliderHeight);
+  lavaGolemLargeSpawned=true; 
+  largeLavaGolems.add(lavaGolemLarge);
+  //lavaGolem.debug=true;
+}
+
+
+function createLavaGolem(x,y){
+  lavaGolem=createSprite(x,y);
+  lavaGolemHealth=lavaGolemMaxHealth;
+  lavaGolem.setSpeed(1.4, direction);
+  lavaGolem.addAnimation('lavaGolemWalk', lavaGolemWalkAnimation);
+  lavaGolem.setCollider("rectangle",0,0, lavaGolemColliderWidth, lavaGolemColliderHeight);
+  lavaGolemSpawned=true;
+  lavaGolems.add(lavaGolem);
+  //lavaGolem.debug=true;
+}
+
+function createLavaGolem1(x,y){
+  lavaGolem1=createSprite(x,y);
+  lavaGolem1Health=lavaGolem1MaxHealth;
+  lavaGolem1.setSpeed(1.4, direction);
+  lavaGolem1.addAnimation('lavaGolemWalk', lavaGolemWalkAnimation);
+  lavaGolem1.setCollider("rectangle",0,0, lavaGolemColliderWidth, lavaGolemColliderHeight);
+  lavaGolem1Spawned=true;
+  lavaGolems.add(lavaGolem1);
+  //lavaGolem.debug=true;
+}
+
+function createLavaGolemMedium1(x,y){
+  lavaGolemMedium1=createSprite(x,y);
+  lavaGolemMedium1Health=lavaGolemMedium1MaxHealth;
+  lavaGolemMedium1.setSpeed(2.3, direction);
+  lavaGolemMedium1.addAnimation('lavaGolemMediumWalk', lavaGolemMediumWalkAnimation);
+  lavaGolemMedium1.setCollider("rectangle",0,0, lavaGolemMediumColliderWidth, lavaGolemMediumColliderHeight);
+  mediumLavaGolems.add(lavaGolemMedium1);
+  //lavaGolem.debug=true;
+}
+
+function createLavaGolemMedium2(x,y){
+  lavaGolemMedium2=createSprite(x,y);
+  lavaGolemMedium2Health=lavaGolemMedium1MaxHealth;
+  lavaGolemMedium2.setSpeed(2.3, direction);
+  lavaGolemMedium2.addAnimation('lavaGolemMediumWalk', lavaGolemMediumWalkAnimation);
+  lavaGolemMedium2.setCollider("rectangle",0,0, lavaGolemMediumColliderWidth, lavaGolemMediumColliderHeight);
+  mediumLavaGolems.add(lavaGolemMedium2);
+  //lavaGolem.debug=true;
+}
+
+function createLavaGolemMedium3(x,y){
+  lavaGolemMedium3=createSprite(x,y);
+  lavaGolemMedium3Health=lavaGolemMedium1MaxHealth;
+  lavaGolemMedium3.setSpeed(2.3, direction);
+  lavaGolemMedium3.addAnimation('lavaGolemMediumWalk', lavaGolemMediumWalkAnimation);
+  lavaGolemMedium3.setCollider("rectangle",0,0, lavaGolemMediumColliderWidth, lavaGolemMediumColliderHeight);
+  mediumLavaGolems.add(lavaGolemMedium3);
+  //lavaGolem.debug=true;
+}
+
+function createLavaGolemMedium4(x,y){
+  lavaGolemMedium4=createSprite(x,y);
+  lavaGolemMedium4Health=lavaGolemMedium1MaxHealth;
+  lavaGolemMedium4.setSpeed(2.3, direction);
+  lavaGolemMedium4.addAnimation('lavaGolemMediumWalk', lavaGolemMediumWalkAnimation);
+  lavaGolemMedium4.setCollider("rectangle",0,0, lavaGolemMediumColliderWidth, lavaGolemMediumColliderHeight);
+  mediumLavaGolems.add(lavaGolemMedium4);
+  //lavaGolem.debug=true;
+}
+
+function createFrostMage(x,y){
+  frostMage=createSprite(x,y);
+  frostMageHealth=frostMageMaxHealth;
+  frostMage.addAnimation('float', floatAnimation);
+  frostMage.setSpeed(1, direction);
+  frostMage.setCollider("rectangle",0,0,frostMageColliderWidth, frostMageColliderHeight);
+  frostMageSpawned=true;
+  frostMages.add(frostMage);
+  //frostMage.debug=true;
+}
+function createFireArcher(x,y){
+  fireArcher=createSprite(x,y);
+  fireArcherHealth=fireArcherMaxHealth;
+  fireArcher.addAnimation('fireArcherWalk', fireArcherWalkAnimation);
+    fireArcher.addAnimation('fireArcherShoot', fireArcherShootAnimation);
+  fireArcher.setSpeed(2, direction);
+  fireArcher.setCollider("rectangle",0,0,fireArcherColliderWidth, fireArcherColliderHeight);
+  fireArcherSpawned=true;
+  fireArchers.add(fireArcher);
+  //fireArcher.debug=true;
+}
+
+function getHitByBoss(castle, boss){
+  castleHealth-=250;
+  boss.remove();
+  //bossSpawned=false;
+  bossHealth=250;
+  soundCastleHit.play();
+  /*if (playerHealth%10==0){
+  that means "if the player health is CLEANLY divisible by 10, play the sound."
+      soundCastleHit.play();
+     }*/
+  //console.log("The Castle is under attack! It is currently at "+castleHealth+ " health!");
+  if (castleHealth<=0){
+  gameScene="gameOver";
+   gameOver();
+  }
+}
+
+function getHitByKnight(castle, knight){
+  castleHealth-=5;
+  knight.remove();
+  soundCastleHit.play();
+   if (stage==1){
+     createKnight(600+random(200), 20+random(330));
+  }
+  if (stage==2){
+    createFrozenKnight(600+random(200), 20+random(330));
+  }
+  if(stage==3){
+    createFireKnight(600+random(200), 20+random(330));
+  }
+ // console.log("The Castle is under attack! It is currently at "+castleHealth+ " health!");
+  if (castleHealth<=0){
+    gameScene="gameOver";
+      gameOver();
+  }
+}
+
+function getHitByArrow(castle, arrow){
+  castleHealth--;
+  arrow.remove();
+  soundCastleHit.play();
+  //console.log("The Castle is under attack! It is currently at "+castleHealth+ " health!");
+  if (castleHealth<=0){
+    gameScene="gameOver";
+      gameOver();
+  }
+}
+
+function getHitByFireArrow(castle, fireArrow){
+  castleHealth-=2;
+  fireArrow.remove();
+  soundCastleHit.play();
+  //console.log("The Castle is under attack! It is currently at "+castleHealth+ " health!");
+  if (castleHealth<=0){
+    gameScene="gameOver";
+      gameOver();
+  }
+}
+
+function getHitBySnowflake(castle, snowflake){
+  castleHealth-=5;
+  freeze();
+  snowflake.remove();
+  soundCastleHit.play();
+   if (castleHealth<=0){
+    gameScene="gameOver";
+    gameOver();
+  }
+}
+
+function getHitBySnowball(castle, snowball){
+  castleHealth-=0.5;
+  snowball.remove();
+  soundCastleHit.play();
+   if (castleHealth<=0){
+    gameScene="gameOver";
+      gameOver();
+  }
+}
+
+function getHitByFireArrow(castle, fireArrow){
+  castleHealth-=3;
+  fireArrow.remove();
+  soundCastleHit.play();
+   if (castleHealth<=0){
+    gameScene="gameOver";
+      gameOver();
+  }
+}
+
+
+function getHitByHorse1(castle, horse1){
+  castleHealth-=10;
+  horse1.remove();
+  soundCastleHit.play();
+  horse1Spawned=false;
+ // console.log("The Castle is under attack! It is currently at "+castleHealth+ " health!");
+  if (castleHealth<=0){
+    gameScene="gameOver";
+      gameOver();
+  }
+}
+
+function getHitByHorse2(castle, horse2){
+  castleHealth-=10;
+  horse2.remove();
+  soundCastleHit.play();
+  horse2Spawned=false;
+ // console.log("The Castle is under attack! It is currently at "+castleHealth+ " health!");
+  if (castleHealth<=0){
+    gameScene="gameOver";
+      gameOver();
+  }
+}
+
+function getHitByYeti(castle, yeti){
+  castleHealth-=20;
+  yeti.remove();
+  soundCastleHit.play();
+  yetiSpawned=false;
+ // console.log("The Castle is under attack! It is currently at "+castleHealth+ " health!");
+  if (castleHealth<=0){
+    gameScene="gameOver";
+      gameOver();
+  }
+}
+
+function getHitByLavaGolemLarge(castle, lavaGolemLarge){
+  castleHealth-=15;
+  lavaGolemLarge.remove();
+  lavaGolemKills+=7
+ // createLavaGolemLarge(600+random(200), 20+random(330));
+   lavaGolemSpawned=false;
+  soundCastleHit.play();
+  if (castleHealth<=0){
+    gameScene="gameOver";
+      gameOver();
+  }
+}
+
+function getHitByLavaGolem(castle, lavaGolemNormal){
+  castleHealth-=10;
+ if (lavaGolemNormal==lavaGolem){
+  lavaGolem.remove();
+    lavaGolemKills+=3;
+   lavaGolemSpawned=false;
+ }
+ if (lavaGolemNormal==lavaGolem1){
+   lavaGolem1.remove();
+    lavaGolemKills+=3;
+   lavaGolem1Spawned=false;
+ }
+  soundCastleHit.play();
+  if (castleHealth<=0){
+    gameScene="gameOver";
+      gameOver();
+  }
+}
+
+function getHitByLavaGolemMedium(castle, lavaGolemMedium){
+  if (!lavaGolemSpawned){
+     if (lavaGolemMedium==lavaGolemMedium1){
+     lavaGolemMedium1.remove();
+       lavaGolemKills++;
+  }
+  if (lavaGolemMedium==lavaGolemMedium2){
+     lavaGolemMedium2.remove();
+     lavaGolemKills++;
+  }
+ }
+  if (!lavaGolem1Spawned){
+    if (lavaGolemMedium==lavaGolemMedium3){
+     lavaGolemMedium3.remove();
+       lavaGolemKills++;
+  }
+   if (lavaGolemMedium==lavaGolemMedium4){
+     lavaGolemMedium4.remove();
+      lavaGolemKills++;
+  }
+ }
+  castleHealth-=5;
+  soundCastleHit.play();
+  if (castleHealth<=0){
+    gameScene="gameOver";
+      gameOver();
+  }
+}
+
+function updateBossHealth(x,y,health,maxHealth){
+  if(bossHealth>0){
+    stroke(0);
+    strokeWeight(4);
+    noFill();
+    rect(x,y,healthWidth,healthHeight);
+    noStroke();
+    fill(255,0,0)//255,0,0 is red in RGB.
+    rect(x,y,map(health,0,maxHealth,0,healthWidth),healthHeight);
+  }
+  
+}
+
+function updateYetiHealth(x,y,health,maxHealth){
+  if(yetiHealth>0){
+    stroke(0);
+    strokeWeight(4);
+    noFill();
+    rect(x,y,healthWidth,healthHeight);
+    noStroke();
+    fill(255,0,0)//255,0,0 is red in RGB.
+    rect(x,y,map(health,0,maxHealth,0,healthWidth),healthHeight);
+  }
+  
+  
+}
+
+
+function updateHorse1Health(x,y,health,maxHealth){
+  if(horse1Health>0){
+    stroke(0);
+    strokeWeight(4);
+    noFill();
+    rect(x,y,healthWidth,healthHeight);
+    noStroke();
+    fill(255,0,0)//255,0,0 is red in RGB.
+    rect(x,y,map(health,0,maxHealth,0,healthWidth),healthHeight);
+  }
+  
+}
+
+function updateHorse2Health(x,y,health,maxHealth){
+  if(horse2Health>0){
+    stroke(0);
+    strokeWeight(4);
+    noFill();
+    rect(x,y,healthWidth,healthHeight);
+    noStroke();
+    fill(255,0,0)//255,0,0 is red in RGB.
+    rect(x,y,map(health,0,maxHealth,0,healthWidth),healthHeight);
+  }
+  
+}
+
+  function updateFrostMageHealth(x,y,health,maxHealth, shieldHealth, shieldMaxHealth){
+  if(frostMageHealth>0){
+    stroke(0);
+    strokeWeight(4);
+    noFill();
+    rect(x,y,healthWidth,healthHeight);
+    noStroke();
+    fill(255,0,0)//255,0,0 is red in RGB.
+    rect(x,y,map(health,0,maxHealth,0,healthWidth),healthHeight);
+    fill("blue")
+    rect(x,y,map(shieldHealth, 0, shieldMaxHealth, 0, healthWidth), healthHeight);
+  }
+
+}
+
+function updateFireArcherHealth(x,y,health,maxHealth){
+  if(fireArcherHealth>0){
+    stroke(0);
+    strokeWeight(4);
+    noFill();
+    rect(x,y,healthWidth,healthHeight);
+    noStroke();
+    fill(255,0,0)//255,0,0 is red in RGB.
+    rect(x,y,map(health,0,maxHealth,0,healthWidth),healthHeight);
+  }
+
+}
+
+function updateCastleHealth(x,y,health,maxHealth){
+  if(castleHealth>0){
+    
+    noStroke();
+    if(castleHealth>=170){
+      fill("lime")
+    }
+    if(castleHealth>85&&castleHealth<170){
+      fill("yellow")
+    }
+    if(castleHealth<=85){
+      fill("red")
+    }
+     rect(x,y,map(health,0,maxHealth,0,150),12);
+    //map draws the fraction of the health bar using ratios and math calculations given the parameters.
+     stroke(0);
+    strokeWeight(4);
+    noFill();
+      rect(x,y,150,12);
+
+  }
+}
+
+function freeze(){
+  frozen=true;
+  player.changeAnimation('frozen');
+}
+
+
+/*
+let chanceValue=random(100);
+if(chanceValue==4){
+createPotion(enemy.position.x,enemy.position.y);
+}
+This is how you would make it so that there is a small chance to drop something when an event occurs.
+*/
+
+
+function textSetup(){
+  fill("white");
+  stroke("black");
+  strokeWeight(5);
+  textAlign(CENTER);
+  textSize(60);
+  
+}
+
+function volumeControl(){
+  if (keyIsDown(219)){
+      volume-=0.1;
+  }
+  else if (keyIsDown(221)){
+    volume+=0.1;
+  }
+  song.setVolume(volume);
+  soundShoot.setVolume(volume);
+  soundHitEnemy.setVolume(volume);
+  soundCastleHit.setVolume(volume);
+  soundSelect.setVolume(volume);
+}
+
+function keyPressed(){
+  if (keyCode==77){
+    if(songIsPlaying){
+       song.stop();
+      songIsPlaying=false;
+    }
+    else{
+    song.play();
+    song.loop();
+    songIsPlaying=true;
+  }
+  }
+}
+
+function toggleSound(){
+  if(keyIsDown(77)){
+    if(songIsPlaying){
+      song.stop();
+      soundShoot.setVolume(0);
+      songIsPlaying=false;
+    }
+    else if(!keyIsDown(77)){
+      song.play();
+      song.loop();
+      songIsPlaying=true;
+    }
+  }
+}
+
+function updateHealthBars(){
+  if (bossSpawned&&bossDefeated==false){
+    updateBossHealth(boss.position.x-30, boss.position.y-50, bossHealth, bossMaxHealth);
+  }
+  if (horse1Spawned){
+    updateHorse1Health(horse1.position.x-10, horse1.position.y-45,horse1Health, horse1MaxHealth);
+  }
+  if (horse2Spawned){
+    updateHorse2Health(horse2.position.x-10, horse2.position.y-45,horse2Health, horse2MaxHealth);
+  }
+  if (frostMageSpawned&&frostMageDefeated==false){
+    updateFrostMageHealth(frostMage.position.x-25, frostMage.position.y-55, frostMageHealth, frostMageMaxHealth, iceShieldHealth, iceShieldMaxHealth);
+  }
+  if (fireArcherSpawned&&fireArcherDefeated==false){
+    updateFireArcherHealth(fireArcher.position.x, fireArcher.position.y-75, fireArcherHealth, fireArcherMaxHealth);
+  }
+  if (yetiSpawned){
+    updateYetiHealth(yeti.position.x-25, yeti.position.y-45, yetiHealth, yetiMaxHealth);
+  }
+  updateCastleHealth(25,460,castleHealth,castleMaxHealth);
+   fill("white")
+  stroke("black")
+  strokeWeight(4);
+  textSize(15);
+  text("Castle Health: "+castleHealth,25,440,canvasWidth, canvasHeight);
+  text("Score: "+score, 200, 470);
+  text("Stage "+stage, 300, 470);
+}
+
+function updateTimer(){
+  timer=Date.now()-startTime;
+  seconds=Math.floor(timer/1000);
+  //text(timer,0,0,canvasWidth,canvasHeight);
+  //text(seconds,0,40,canvasWidth, canvasHeight);
+}
+
+function level(){
+  if (!bossDefeated){
+    background(bgImg);
+  }
+  if (bossDefeated&&!frostMageDefeated){
+    background(iceBgImg);
+    stage=2;
+   /*enemies.remove(knight);
+    for(let i=0; i<8; i++){
+  let knightHeight=random(450);
+  let knightCanvasX= random(200);
+  let posX=600+knightCanvasX;
+  let posY=knightHeight;
+  createFrozenKnight(posX,posY);
+    }*/
+    if (horse1Spawned){
+      horse1.remove();
+      horse1Health=0;
+    }
+    if (horse2Spawned){
+      horse2.remove();
+      horse2Health=0;
+    }
+  }
+  if (frostMageDefeated&&!fireArcherDefeated){
+    background(lavaBgImg);
+    stage=3;
+    iceHealth=0;
+    ice.remove();
+    ice.remove();
+    if(yetiSpawned){
+      yeti.remove();
+      yetiSpawned=false;
+      yetiHealth=0;
+    }
+  }
+   updateTimer();
+  playerControls();
+  drawSprites();
+  enemyMovements();
+  collisions();
+  toggleSound();
+  volumeControl();
+  checkForArchers();
+  checkForBosses();
+  updateHealthBars();
+  timedEvents();
+  shoot();
+}
+
+function title(){
+  sceneText="Dragons and Castles";
+  sceneSubtitle="Click to Start!\nPress P to Pause";
+  sceneImg=TitleImg;
+  //loaded();
+}
+
+function gameOver(){
+    sceneImg=LoseImg;
+    sceneText="Game Over!\nFinal Score: "+score;
+  sceneSubtitle="Press R to Reload the Page";
+  song.stop();
+  if(keyIsDown(82)){
+    window.location.reload();
+  }
+}
+
+function pause(){
+  sceneImg=lavaGolemImg;
+  sceneText="Game Paused";
+  sceneSubtitle="Press N to learn about Bosses\nPress M to learn about projectiles";
+   console.log("hello fren!");
+}
+
+function keyPressed(){
+  if (keyCode==80){
+    if(paused==false){
+      paused=true;
+      pause();
+    }
+    if(paused==true){
+      paused=false;
+    }
+  }
+}
+
+function draw() {
+if (gameScene=="title"){
+  title();
+}
+if (gameScene=="gameOver"){
+  gameOver();
+}
+  if (gameScene=="level"){
+ level();
+    /*if (keyIsDown(80)){
+      paused=true;
+      pause();
+      console.log("pauseduisud");
+    }*/
+   }
+  else{
+    textSetup();
+    background(sceneImg);
+    text(sceneText,0,100,canvasWidth,canvasHeight);
+    song.stop();
+    textSize(45);
+    text(sceneSubtitle,0,250,canvasWidth,canvasHeight);
+   }
+}
+
